@@ -11,20 +11,20 @@ public interface IAnalyzer
     /// <summary>
     ///     Самые популярные бренды
     /// </summary>
-    /// <returns>Бренды</returns>
+    /// <returns>Бренд и количество</returns>
     (string? Name, int Count)[] MostPopularBrands { get; }
 
     /// <summary>
-    ///     Самая популярная категория
+    ///     Самые популярные категории
     /// </summary>
-    /// <returns>ID категории</returns>
-    long MostPopularCategoryCode { get; }
+    /// <returns>ID категории и количество</returns>
+    (long Id, int Count)[] MostPopularCategoryIDs { get; }
 
     /// <summary>
-    ///     Самый популярный товар
+    ///     Самые популярные товары
     /// </summary>
-    /// <returns>ID продукта</returns>
-    long MostPopularProduct { get; }
+    /// <returns>ID продукта и количество</returns>
+    (long Id, int Count)[] MostPopularProductIDs { get; }
 
     /// <summary>
     ///     Запустить пакетный анализа данных
