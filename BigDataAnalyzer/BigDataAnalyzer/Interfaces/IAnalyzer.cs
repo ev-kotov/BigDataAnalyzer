@@ -29,7 +29,7 @@ public interface IAnalyzer
     /// <summary>
     ///     Запустить пакетный анализа данных
     /// </summary>
-    /// <param name="path">Путь к файлу</param>
+    /// <param name="filePaths">Пути к файлам</param>
     /// <param name="packageSize">Размер пакета</param>
-    public void StartPackageAnalyze(string path, int packageSize);
+    public void StartPackageAnalyze(IEnumerable<string> filePaths, int packageSize = 1000000);
 }
