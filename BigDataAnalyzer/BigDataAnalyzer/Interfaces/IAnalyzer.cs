@@ -1,5 +1,8 @@
 ﻿namespace BigDataAnalyzer.Interfaces;
 
+/// <summary>
+///     Анализатор данных
+/// </summary>
 public interface IAnalyzer
 {
     /// <summary>
@@ -29,7 +32,7 @@ public interface IAnalyzer
     /// <summary>
     ///     Запустить пакетный анализа данных
     /// </summary>
-    /// <param name="filePaths">Пути к файлам</param>
     /// <param name="packageSize">Размер пакета</param>
-    public void StartPackageAnalyze(IEnumerable<string> filePaths, int packageSize = 1000000);
+    /// <param name="filePaths">Пути к файлам</param>
+    public void StartPackageAnalyze(int packageSize, string[] filePaths);
 }

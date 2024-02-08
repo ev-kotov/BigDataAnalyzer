@@ -1,4 +1,5 @@
-﻿using BigDataAnalyzer.Interfaces;
+﻿using System.Text;
+using BigDataAnalyzer.Interfaces;
 
 namespace BigDataAnalyzer;
 
@@ -26,7 +27,7 @@ public class Analyzer : IAnalyzer
     public (long Id, int Count)[] MostPopularProductIDs { get; private set; }
 
 
-    public void StartPackageAnalyze(IEnumerable<string> filePaths, int packageSize = 1000000)
+    public void StartPackageAnalyze(int packageSize, string[] filePaths)
     {
         var tuples = new ValueTuple<ParameterizedThreadStart, string>[]
         {
@@ -35,16 +36,23 @@ public class Analyzer : IAnalyzer
             (SetMostPopularCategoryIDs, "Популярность категории"),
             (SetMostPopularProductIDs, "Популярность продукта")
         };
+        
+        var builder = new StringBuilder();
+        builder.AppendLine($"Идёт обработка данных. Размер пакета - {packageSize}.");
+        builder.AppendLine("Дождитесь результатов обработки всех пакетов...");
+        Console.WriteLine(builder);
 
         foreach (var filePath in filePaths)
         {
             using var streamReader = new StreamReader(filePath);
 
-            string? line;
-
             streamReader.ReadLine(); // выкидываю первую строку с заголовками
-
+            
+            string? line;
+            
             var events = new List<Event>();
+
+            var packageNumber = 1;
 
             while ((line = streamReader.ReadLine()) != null)
             {
@@ -52,7 +60,16 @@ public class Analyzer : IAnalyzer
 
                 events.Add(new Event(strings));
 
-                if (events.Count < packageSize) continue;
+                var eventsCount = events.Count;
+
+                if (eventsCount < packageSize)
+                {
+                    SimpleProgressBar.Show($"Анализ пакета № {packageNumber}", eventsCount, packageSize,
+                        packageNumber+2);
+                    continue;
+                }
+
+                packageNumber++;
 
                 var eventsCopy = events.ToArray();
 
@@ -60,8 +77,10 @@ public class Analyzer : IAnalyzer
 
                 foreach (var (parameterizedThreadStart, name) in tuples)
                 {
-                    var thread = new Thread(parameterizedThreadStart);
-                    thread.Name = name;
+                    var thread = new Thread(parameterizedThreadStart)
+                    {
+                        Name = name
+                    };
                     thread.Start(eventsCopy);
                 }
             }
@@ -75,9 +94,14 @@ public class Analyzer : IAnalyzer
         lock (AmountOfIncomeLocker)
         {
             if (AmountOfIncome is null or 0)
-                AmountOfIncome = events.Select(x => x.Price).Sum();
+                AmountOfIncome = Sum(events);
             else
-                AmountOfIncome += events.Select(x => x.Price).Sum();
+                AmountOfIncome += Sum(events);
+        }
+
+        decimal? Sum(IEnumerable<Event> items)
+        {
+            return items.Select(x => x.Price).Sum();
         }
     }
 
