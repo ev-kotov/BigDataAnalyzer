@@ -19,5 +19,6 @@ BigDataAnalyzer.exe 500000 C:\Users\Dowloads\2019-Oct.csv C:\Users\Dowloads\2019
 ```
 
 ## Вид
-![Far_ZJR6RMbynL](https://github.com/ev-kotov/BigDataAnalyzer/assets/48629337/d9a89ead-21ce-4e4e-ac0f-744e0c41d8ed)
+![image](https://github.com/ev-kotov/BigDataAnalyzer/assets/48629337/06bc7caa-157a-4952-9a39-f8e4c9d3b921)
+
 
